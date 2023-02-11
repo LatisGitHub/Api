@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  # Nginx
+  # Nginx
+  web:
+    container_name: nginx2
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./api/:/var/www/ 
+      - ./nginx.php-fpm.conf:/etc/nginx/nginx.conf:ro
+    links:
+      - php-fpm
+
+  # Configuración de php
+  php-fpm:
+    container_name: php2
+    build: .
+    volumes:
+      - ./api:/var/www/html
+  
+  nodeapi:
+    image: "node:latest"
+    container_name: "nodejs2"
+    user: "node"
+    working_dir: /home/node/api
+    environment:
+      - NODE_ENV=production
+    volumes: 
+      - ./:/home/node/api
+    ports:
+      - "3000:3000"
+    command: "npm install" 
+  
+      
